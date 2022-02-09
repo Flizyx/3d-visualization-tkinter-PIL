@@ -42,10 +42,8 @@ def make_anaglyph(left, right, color, path):
 
 root = Tk()
 
-
 frm = Frame(root)
 frm.pack(side=BOTTOM, padx=15, pady=15)
-
 
 lbl = Label(root)
 lbl.pack()
