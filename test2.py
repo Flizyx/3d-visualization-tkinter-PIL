@@ -1,22 +1,32 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter.ttk import *
 import os
 import tkinter as tk
 from PIL import Image, ImageTk
 
 def showimage():
-    fln = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
-    fln2 = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
-    img1 = Image.open(fln)
-    img2 = Image.open(fln2)
-    # result=make_stereopair(img1,img2,"color","testresult.jpg")
-    # result=make_stereopair2(img1,img2,"color","testresult.jpg")
-    # result=make_stereopair3(img1,img2,"color","testresult.jpg")
-    result=make_anaglyph(img1,img2,"color","testresult.jpg") #aqui se crea la imagen en anaglyph
+    valor=comboExample.get()
+    if valor is "":
+        print("indefinido")
+    else:
+        fln = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
+        fln2 = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
+        img1 = Image.open(fln)
+        img2 = Image.open(fln2)
+        if valor == "anaglifo":
+            result=make_anaglyph(img1,img2,"color","testresult.jpg")
+        if valor == "izq-der":
+            result=make_stereopair(img1,img2,"color","testresult.jpg")
+        if valor == "der-izq":
+            result=make_stereopair2(img1,img2,"color","testresult.jpg")
+        if valor == "top-down":
+            result=make_stereopair3(img1,img2,"color","testresult.jpg") #aqui se crea la imagen en anaglyph
 
-    img = ImageTk.PhotoImage(result)
-    lbl.configure(image=img)
-    lbl.image = img
+
+        img = ImageTk.PhotoImage(result)
+        lbl.configure(image=img)
+        lbl.image = img
 
 matrices = {
     'true': [ [ 0.299, 0.587, 0.114, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0.299, 0.587, 0.114 ] ],
@@ -124,6 +134,14 @@ lbl.pack(fill=BOTH, expand=YES)
 
 btn = Button(frm, text="Cargar imagen", command=showimage)
 btn.pack(side=tk.LEFT)
+
+comboExample = Combobox(frm, 
+                            values=[
+                                    "anaglifo", 
+                                    "izq-der",
+                                    "der-izq",
+                                    "top-down"])
+comboExample.pack(side=tk.LEFT, padx=10)
 
 btn2 = Button(frm, text="Exit", command=lambda: exit())
 btn2.pack(side=tk.LEFT, padx=10)
