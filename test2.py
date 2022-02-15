@@ -9,9 +9,11 @@ def showimage():
     fln2 = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("JPG File", "*.jpg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
     img1 = Image.open(fln)
     img2 = Image.open(fln2)
-    
+    # result=make_stereopair(img1,img2,"color","testresult.jpg")
+    # result=make_stereopair2(img1,img2,"color","testresult.jpg")
     result=make_stereopair3(img1,img2,"color","testresult.jpg")
     # result=make_anaglyph(img1,img2,"color","testresult.jpg") #aqui se crea la imagen en anaglyph
+
     img = ImageTk.PhotoImage(result)
     lbl.configure(image=img)
     lbl.image = img
@@ -24,6 +26,12 @@ matrices = {
     'optimized': [ [ 0, 0.7, 0.3, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 1, 0, 0, 0, 1 ] ],
 }
 def make_anaglyph(left, right, color, path):
+ #redimensionar
+    width, height = left.size
+    r=700/height
+    left= left.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+    right= right.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+
     width, height = left.size
     leftMap = left.load()
     rightMap = right.load()
@@ -42,6 +50,12 @@ def make_anaglyph(left, right, color, path):
     return left
 
 def make_stereopair(left, right, color, path):
+  #redimensionar
+    width, height = left.size
+    r=560/height
+    left= left.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+    right= right.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+
     width, height = left.size
     leftMap = left.load()
     rightMap = right.load()
@@ -56,6 +70,12 @@ def make_stereopair(left, right, color, path):
     pair.save(path)
     return pair
 def make_stereopair2(right, left, color, path):
+  #redimensionar
+    width, height = left.size
+    r=560/height
+    left= left.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+    right= right.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+
     width, height = left.size
     leftMap = left.load()
     rightMap = right.load()
@@ -70,6 +90,12 @@ def make_stereopair2(right, left, color, path):
     pair.save(path)
     return pair
 def make_stereopair3(left, right, color, path):
+    #redimensionar
+    width, height = left.size
+    r=320/height
+    left= left.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+    right= right.resize((int(height*r),int(width*r)), Image.ANTIALIAS)
+
     width, height = left.size
     leftMap = left.load()
     rightMap = right.load()
@@ -90,6 +116,7 @@ frm.pack(side=BOTTOM, padx=15, pady=15)
 
 lbl = Label(root)
 lbl.pack()
+lbl.pack(fill=BOTH, expand=YES)
 
 btn = Button(frm, text="Cargar imagen", command=showimage)
 btn.pack(side=tk.LEFT)
