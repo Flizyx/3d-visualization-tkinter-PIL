@@ -10,7 +10,7 @@ def showimage():
     img1 = Image.open(fln)
     img2 = Image.open(fln2)
     
-    result=make_stereopair(img1,img2,"color","testresult.jpg")
+    result=make_stereopair3(img1,img2,"color","testresult.jpg")
     # result=make_anaglyph(img1,img2,"color","testresult.jpg") #aqui se crea la imagen en anaglyph
     img = ImageTk.PhotoImage(result)
     lbl.configure(image=img)
@@ -51,6 +51,34 @@ def make_stereopair(left, right, color, path):
         for x in range(0, width):
             pairMap[x, y] = leftMap[x, y]
             pairMap[x + width, y] = rightMap[x, y]
+    if color == 'mono':
+        pair = pair.convert('L')
+    pair.save(path)
+    return pair
+def make_stereopair2(right, left, color, path):
+    width, height = left.size
+    leftMap = left.load()
+    rightMap = right.load()
+    pair = Image.new('RGB', (width * 2, height))
+    pairMap = pair.load()
+    for y in range(0, height):
+        for x in range(0, width):
+            pairMap[x, y] = leftMap[x, y]
+            pairMap[x + width, y] = rightMap[x, y]
+    if color == 'mono':
+        pair = pair.convert('L')
+    pair.save(path)
+    return pair
+def make_stereopair3(left, right, color, path):
+    width, height = left.size
+    leftMap = left.load()
+    rightMap = right.load()
+    pair = Image.new('RGB', (width , height * 2))
+    pairMap = pair.load()
+    for y in range(0, height):
+        for x in range(0, width):
+            pairMap[x, y] = leftMap[x, y]
+            pairMap[x, y + height] = rightMap[x, y]
     if color == 'mono':
         pair = pair.convert('L')
     pair.save(path)
