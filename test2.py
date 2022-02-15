@@ -9,7 +9,9 @@ def showimage():
     fln2 = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("JPG File", "*.jpg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
     img1 = Image.open(fln)
     img2 = Image.open(fln2)
-    result=make_anaglyph(img1,img2,"color","testresult.jpg")
+    
+    result=make_stereopair(img1,img2,"color","testresult.jpg")
+    # result=make_anaglyph(img1,img2,"color","testresult.jpg") #aqui se crea la imagen en anaglyph
     img = ImageTk.PhotoImage(result)
     lbl.configure(image=img)
     lbl.image = img
@@ -39,7 +41,20 @@ def make_anaglyph(left, right, color, path):
     left.save(path)
     return left
 
-
+def make_stereopair(left, right, color, path):
+    width, height = left.size
+    leftMap = left.load()
+    rightMap = right.load()
+    pair = Image.new('RGB', (width * 2, height))
+    pairMap = pair.load()
+    for y in range(0, height):
+        for x in range(0, width):
+            pairMap[x, y] = leftMap[x, y]
+            pairMap[x + width, y] = rightMap[x, y]
+    if color == 'mono':
+        pair = pair.convert('L')
+    pair.save(path)
+    return pair
 root = Tk()
 
 frm = Frame(root)
