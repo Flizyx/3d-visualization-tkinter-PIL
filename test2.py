@@ -5,24 +5,43 @@ import os
 import tkinter as tk
 from PIL import Image, ImageTk
 
+global init
+init=0
+global fln
+global fln2
+global img1
+global img2
 def showimage():
     valor=comboExample.get()
     if valor is "":
         print("indefinido")
     else:
-        fln = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
-        fln2 = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
-        img1 = Image.open(fln)
-        img2 = Image.open(fln2)
+        global init
+        global fln
+        global fln2
+        global img1
+        global img2
+        if init==0:
+            fln = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
+            fln2 = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("IMAGE File", "*.jpg *.jpeg *.png"),("JPG File", "*.jpg"),("JPGE File", "*.jpeg"), ("PNG file", "*.png"), ("ALL Files", "*.*")))
+            img1 = Image.open(fln)
+            img2 = Image.open(fln2)
+        init=1
         if valor == "anaglifo":
             result=make_anaglyph(img1,img2,"color","testresult.jpg")
+        if valor == "anaglifo2":
+            result=make_anaglyph(img1,img2,"mono","testresult.jpg")
+        if valor == "anaglifo3":
+            result=make_anaglyph(img1,img2,"halfcolor","testresult.jpg")
+        if valor == "anaglifo4":
+            result=make_anaglyph(img1,img2,"optimized","testresult.jpg")
         if valor == "izq-der":
             result=make_stereopair(img1,img2,"color","testresult.jpg")
         if valor == "der-izq":
             result=make_stereopair2(img1,img2,"color","testresult.jpg")
         if valor == "top-down":
             result=make_stereopair3(img1,img2,"color","testresult.jpg") #aqui se crea la imagen en anaglyph
-
+        
 
         img = ImageTk.PhotoImage(result)
         lbl.configure(image=img)
@@ -107,8 +126,8 @@ def make_stereopair3(left, right, color, path):
     #redimensionar
     width, height = left.size
     r=320/height
-    left= left.resize((int(width*r),int(height*r)), Image.ANTIALIAS)
-    right= right.resize((int(width*r),int(height*r)), Image.ANTIALIAS)
+    left= left.resize((int(width*r*2),int(height*r)), Image.ANTIALIAS)
+    right= right.resize((int(width*r*2),int(height*r)), Image.ANTIALIAS)
 
     width, height = left.size
     leftMap = left.load()
@@ -137,7 +156,10 @@ btn.pack(side=tk.LEFT)
 
 comboExample = Combobox(frm, 
                             values=[
-                                    "anaglifo", 
+                                    "anaglifo",
+                                    "anaglifo2", 
+                                    "anaglifo3", 
+                                    "anaglifo4",  
                                     "izq-der",
                                     "der-izq",
                                     "top-down"])
